@@ -5,44 +5,73 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Escritorio</title>
   <link rel="manifest" href="manifest.json" />
-  <link rel="stylesheet" href="style.css" />
   <meta name="theme-color" content="#0f1115" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="desktop" class="desktop"></div>
 
-  <!-- Menú contextual simple -->
-  <div id="context-menu" class="context hidden">
-    <button id="ctx-new-file">Nuevo acceso directo</button>
-    <button id="ctx-change-wall">Cambiar fondo</button>
+  <!-- Menú contextual -->
+  <div id="ctx" class="ctx hidden">
+    <div class="ctx-item has-sub" id="ctx-new">Nuevo… ▸
+      <div class="ctx-sub hidden" id="ctx-new-sub">
+        <button class="ctx-btn" id="new-folder">📁 Carpeta</button>
+        <button class="ctx-btn" id="new-text">📄 Archivo de texto</button>
+      </div>
+    </div>
+    <button class="ctx-item" id="ctx-wall">🖼️ Configurar fondo…</button>
   </div>
 
-  <!-- Barra de tareas estilo Win11 -->
+  <!-- Input oculto para subir fondo -->
+  <input id="wall-input" type="file" accept="image/*" class="hidden" />
+
+  <!-- Barra de tareas -->
   <div class="taskbar">
     <div class="left">
-      <button id="btn-start" class="btn btn-start" title="Inicio">
-        <img src="icons/windows11.svg" alt="Inicio" />
-      </button>
+      <div class="brand">Escritorio</div>
     </div>
-    <div id="taskbar-apps" class="center"></div>
+    <div class="center" id="tb-center"></div>
     <div class="right">
+      <button id="add-shortcut" class="bubble" title="Añadir acceso directo">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
       <div id="clock" class="clock"></div>
     </div>
   </div>
 
-  <!-- Inicio -->
-  <div id="start" class="start hidden">
-    <div class="start-header">
-      <input id="search" class="search" type="text" placeholder="Buscar apps o URLs…" />
-      <div class="actions">
-        <button id="btn-add" class="btn small">+ Añadir app</button>
-        <button id="btn-wall" class="btn small">🖼 Fondo</button>
-      </div>
-    </div>
-    <div id="pinned" class="grid"></div>
-  </div>
+  <!-- Diálogo para añadir acceso directo -->
+  <dialog id="dlg-add" class="dlg">
+    <h3>Agregar acceso directo</h3>
+    <label class="lbl">Elegir aplicación</label>
+    <select id="preset" class="field">
+      <option value="">— Selecciona —</option>
+      <option value='{"title":"Gmail","url":"https://mail.google.com/"}'>Gmail</option>
+      <option value='{"title":"YouTube","url":"https://youtube.com/"}'>YouTube</option>
+      <option value='{"title":"Google Drive","url":"https://drive.google.com/"}'>Google Drive</option>
+      <option value='{"title":"Documentos","url":"https://docs.google.com/"}'>Google Docs</option>
+      <option value='{"title":"Spotify","url":"https://open.spotify.com/"}'>Spotify</option>
+      <option value='{"title":"Netflix","url":"https://netflix.com/"}'>Netflix</option>
+      <option value='{"title":"Twitter / X","url":"https://x.com/"}'>Twitter / X</option>
+      <option value='{"title":"WhatsApp Web","url":"https://web.whatsapp.com/"}'>WhatsApp Web</option>
+      <option value="custom">Personalizada…</option>
+    </select>
 
-  <!-- Template icono escritorio -->
+    <div id="custom-wrap" class="hidden">
+      <label class="lbl">Nombre</label>
+      <input id="custom-name" class="field" placeholder="Ej: Notion" />
+      <label class="lbl">URL</label>
+      <input id="custom-url" class="field" placeholder="https://…" />
+    </div>
+
+    <div class="dlg-actions">
+      <button id="add-cancel" class="btn ghost">Cancelar</button>
+      <button id="add-ok" class="btn">Añadir</button>
+    </div>
+  </dialog>
+
+  <!-- Template icono -->
   <template id="tpl-icon">
     <div class="icon" draggable="true">
       <img class="icon-img" />
