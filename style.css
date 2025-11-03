@@ -1,71 +1,82 @@
 :root{
-  --glass-bg: rgba(20,22,28,.6);
-  --glass-brd: rgba(255,255,255,.08);
-  --txt: #e6e7ea;
-  --muted: #aeb3bd;
-  --accent: #5aa7ff;
-  --radius: 14px;
-  --shadow: 0 10px 30px rgba(0,0,0,.35);
-  --taskbar-h: 54px;
-  --icon-w: 84px;
+  --bg:#0f1115;
+  --glass: rgba(20,22,28,.55);
+  --brd: rgba(255,255,255,.09);
+  --txt:#e7e9ee;
+  --muted:#aeb3bd;
+  --radius:16px;
+  --taskbar-h:60px;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --iconw:88px;
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:system-ui,"Segoe UI",Roboto,Ubuntu,Helvetica,Arial,sans-serif;color:var(--txt);user-select:none}
+html,body{height:100%;margin:0;font-family:system-ui,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--txt)}
+.hidden{display:none !important}
+
 .desktop{
   height:100%;
-  background: #0f1115 url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat fixed;
-  position:relative;
-  overflow:hidden;
-  padding-bottom:var(--taskbar-h);
+  background: var(--bg) url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1920&auto=format&fit=crop') center/cover fixed no-repeat;
+  position:relative; overflow:hidden; padding-bottom:var(--taskbar-h);
 }
+
+/* Iconos */
 .icon{
-  position:absolute;
-  width:var(--icon-w);
-  text-align:center;
-  cursor:grab;
-  padding:8px 6px;
-  border-radius:12px;
-  transition:background .2s;
+  position:absolute; width:var(--iconw); text-align:center; padding:8px 6px;
+  border-radius:12px; cursor:grab; user-select:none;
 }
 .icon:active{cursor:grabbing}
-.icon:hover{background:rgba(255,255,255,.08)}
-.icon-img{width:48px;height:48px;display:block;margin:0 auto 8px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
-.icon-label{font-size:12px;line-height:1.15;text-shadow:0 2px 4px rgba(0,0,0,.65);word-break:break-word}
+.icon:hover{background:rgba(255,255,255,.07)}
+.icon-img{width:52px;height:52px;border-radius:12px;display:block;margin:0 auto 8px;box-shadow:0 4px 12px rgba(0,0,0,.25);object-fit:cover}
+.icon-label{font-size:12px;text-shadow:0 2px 4px rgba(0,0,0,.65)}
 
 /* Taskbar */
 .taskbar{
-  position:fixed;left:50%;transform:translateX(-50%);
-  bottom:10px;height:var(--taskbar-h);width:min(900px,92vw);
-  background:var(--glass-bg);border:1px solid var(--glass-brd);
-  backdrop-filter: blur(14px) saturate(140%);
-  border-radius: calc(var(--radius) + 6px);
-  box-shadow: var(--shadow);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 10px;gap:10px;
+  position:fixed; left:50%; transform:translateX(-50%);
+  bottom:10px; height:var(--taskbar-h); width:min(980px,94vw);
+  background:var(--glass); border:1px solid var(--brd); backdrop-filter: blur(16px) saturate(140%);
+  border-radius: calc(var(--radius) + 8px); box-shadow:var(--shadow);
+  display:flex; align-items:center; justify-content:space-between; padding:0 12px; gap:10px;
 }
-.taskbar .left,.taskbar .right{display:flex;align-items:center;gap:8px}
+.brand{font-weight:600; letter-spacing:.2px; color:#dfe3ec}
 .center{display:flex;gap:8px;justify-content:center;flex:1}
-.btn{
-  border:1px solid var(--glass-brd);background:rgba(255,255,255,.04);
-  color:var(--txt);padding:8px 12px;border-radius:10px;cursor:pointer;
-}
-.btn:hover{background:rgba(255,255,255,.08)}
-.btn.small{padding:6px 10px;font-size:12px}
-.btn-start{width:38px;height:38px;display:grid;place-items:center}
-.btn-start img{width:20px;height:20px}
-.tb-app{
-  width:38px;height:38px;border-radius:10px;border:1px solid var(--glass-brd);
-  background:rgba(255,255,255,.06);display:grid;place-items:center;cursor:pointer;
-}
-.tb-app img{width:18px;height:18px;border-radius:6px}
-.tb-app.active{outline:2px solid var(--accent);background:rgba(90,167,255,.18)}
-.clock{font-size:12px;color:var(--muted);width:70px;text-align:center}
+.clock{color:var(--muted); font-size:12px; width:74px; text-align:center}
 
-/* Start menu */
-.start{
-  position:fixed;left:50%;transform:translateX(-50%);
-  bottom:calc(var(--taskbar-h) + 16px);
-  width:min(880px,92vw);max-height:65vh;
-  background:var(--glass-bg);border:1px solid var(--glass-brd);backdrop-filter: blur(16px);
-  border-radius:24px;box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap
+.bubble{
+  height:42px; width:42px; border-radius:14px; border:1px solid var(--brd);
+  background:rgba(255,255,255,.06); display:grid; place-items:center; color:var(--txt); cursor:pointer;
+}
+.bubble:hover{background:rgba(255,255,255,.1)}
+
+/* Menú contextual */
+.ctx{
+  position:absolute; z-index:1000; background:var(--glass); border:1px solid var(--brd);
+  backdrop-filter: blur(14px); border-radius:12px; box-shadow:var(--shadow);
+  padding:6px; color:var(--txt); min-width:220px;
+}
+.ctx-item{position:relative; padding:8px 10px; border-radius:8px; cursor:pointer}
+.ctx-item:hover{background:rgba(255,255,255,.08)}
+.ctx .has-sub::after{content:"▸"; position:absolute; right:10px; opacity:.7}
+.ctx-sub{
+  position:absolute; left:100%; top:0; margin-left:6px; background:var(--glass);
+  border:1px solid var(--brd); border-radius:10px; padding:6px; box-shadow:var(--shadow);
+  display:flex; flex-direction:column; gap:4px; min-width:180px;
+}
+.ctx-btn{all:unset; padding:8px 10px; border-radius:8px; cursor:pointer}
+.ctx-btn:hover{background:rgba(255,255,255,.08)}
+
+/* Dialogo */
+.dlg{border:none; border-radius:16px; padding:16px; width:min(520px,94vw); background:#151821; color:var(--txt)}
+.dlg::backdrop{background:rgba(0,0,0,.5)}
+.dlg h3{margin:0 0 12px}
+.lbl{display:block; font-size:12px; color:var(--muted); margin:10px 0 6px}
+.field{width:100%; padding:10px 12px; border-radius:10px; border:1px solid var(--brd); background:#0f1218; color:var(--txt); outline:none}
+.btn{padding:10px 14px; border-radius:10px; border:1px solid var(--brd); background:#23293a; color:var(--txt); cursor:pointer}
+.btn:hover{background:#2c3350}
+.btn.ghost{background:transparent}
+.dlg-actions{display:flex; gap:10px; justify-content:flex-end; margin-top:14px}
+
+@media (max-width:640px){
+  .icon-img{width:44px;height:44px}
+  .taskbar{width:96vw}
+}
 
