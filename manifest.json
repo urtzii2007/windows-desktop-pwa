@@ -1,15 +1,11 @@
 {
-  "name": "Escritorio Windows",
+  "name": "Escritorio estilo Windows",
   "short_name": "Escritorio",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#1E1E1E",
-  "theme_color": "#1E1E1E",
+  "background_color": "#0f1115",
+  "theme_color": "#0f1115",
   "icons": [
-    {
-      "src": "https://cdn-icons-png.flaticon.com/512/882/882702.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
+    { "src": "icons/512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
