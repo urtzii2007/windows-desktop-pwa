@@ -27,15 +27,15 @@ const clock = $('#clock');
 const barTitle = $('#bar-title');
 
 // Estado
-let items = JSON.parse(localStorage.getItem('desktopItems') || '[]'); // {id,type,title,url,top,left}
+let items = JSON.parse(localStorage.getItem('desktopItems') || '[]');
 let wallpaper = localStorage.getItem('wallpaperDataUrl') || '';
 let titleText = localStorage.getItem('barTitle') || 'Escritorio';
 
-// Pintar fondo y título guardados
+// Fondo y título guardados
 if (wallpaper) desktop.style.backgroundImage = `url('${wallpaper}')`;
 barTitle.textContent = titleText;
 
-// Reloj (fecha + hora)
+// 🕒 Reloj con fecha
 function tick(){
   const now = new Date();
   const time = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
@@ -44,7 +44,7 @@ function tick(){
 }
 tick(); setInterval(tick, 1000);
 
-// Render de escritorio
+// 🧱 Render de escritorio
 function renderDesktop(){
   $$('.icon').forEach(n=>n.remove());
   items.forEach(i => {
@@ -58,7 +58,7 @@ function renderDesktop(){
 
     if (i.type === 'shortcut') {
       img.src = FAVICON(i.url);
-      node.ondblclick = () => window.open(i.url, '_blank');
+      node.ondblclick = () => openUrl(i.url);
     } else if (i.type === 'folder') {
       img.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(folderSVG('#f1c40f'));
       node.ondblclick = () => alert('(Demo) Carpeta vacía');
@@ -71,22 +71,25 @@ function renderDesktop(){
     desktop.appendChild(node);
   });
 
-  // Burbuja central con accesos (máx 8)
+  // Mostrar accesos anclados (máx 8)
   tbCenter.innerHTML = '';
   items.filter(i=>i.type==='shortcut').slice(0,8).forEach(i=>{
     const b = document.createElement('button');
     b.className = 'bubble';
     const img = document.createElement('img');
-    img.src = FAVICON(i.url); img.width = 20; img.height = 20; img.style.borderRadius='6px';
+    img.src = FAVICON(i.url);
+    img.width = 20;
+    img.height = 20;
+    img.style.borderRadius='6px';
     b.title = i.title;
     b.appendChild(img);
-    b.onclick = () => window.open(i.url, '_blank');
+    b.onclick = () => openUrl(i.url);
     tbCenter.appendChild(b);
   });
 }
 renderDesktop();
 
-// Drag & drop
+// 🖱️ Drag & drop
 function enableDrag(el){
   let sx=0, sy=0, ox=0, oy=0;
   const onDown = e => {
@@ -109,10 +112,12 @@ function enableDrag(el){
   el.addEventListener('mousedown', onDown);
 }
 
-// Guardar
-function save(){ localStorage.setItem('desktopItems', JSON.stringify(items)); }
+// 💾 Guardar
+function save(){
+  localStorage.setItem('desktopItems', JSON.stringify(items));
+}
 
-// Context menu
+// 🧭 Menú contextual
 desktop.addEventListener('contextmenu', e=>{
   e.preventDefault();
   ctxNewSub.classList.add('hidden');
@@ -135,7 +140,7 @@ ctxTitle.onclick = ()=>{
 ctxNew.addEventListener('mouseenter', ()=> ctxNewSub.classList.remove('hidden'));
 ctxNew.addEventListener('mouseleave', ()=> ctxNewSub.classList.add('hidden'));
 
-// Configurar fondo (archivo local)
+// 🖼️ Configurar fondo (archivo local)
 ctxWall.onclick = ()=> wallInput.click();
 wallInput.onchange = async e=>{
   const file = e.target.files?.[0];
@@ -150,7 +155,7 @@ wallInput.onchange = async e=>{
   wallInput.value = '';
 };
 
-// Añadir acceso directo (+)
+// ➕ Añadir acceso directo
 addBtn.onclick = ()=>{
   preset.value = '';
   customWrap.classList.add('hidden');
@@ -176,15 +181,29 @@ addOk.onclick = ()=>{
   dlg.close();
 };
 
-function validUrl(u){ try{ new URL(u); return true; } catch { return false; } }
+// ✅ Valida URLs y esquemas personalizados (deep links)
+function validUrl(u){
+  // Acepta http(s), intent://, spotify://, whatsapp://, etc.
+  return /^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(u);
+}
 
+// 🚀 Abre URL o deep link
+function openUrl(url){
+  if (/^(intent|mailto|tel|sms|spotify|whatsapp|vscode|slack|zoom):/i.test(url)) {
+    window.location.href = url;
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+// 🗂 Crear nuevo elemento en escritorio
 function makeItem(type, title, extra={}){
   const pos = { top: Math.floor(80 + Math.random()*300) + 'px', left: Math.floor(40 + Math.random()*500) + 'px' };
   items.push({ id: crypto.randomUUID(), type, title, ...extra, ...pos });
   save(); renderDesktop();
 }
 
-// SVG simples
+// SVG íconos simples
 function folderSVG(color='#f1c40f'){
   return `<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="${color}">
     <path d="M10 4l2 2h7a3 3 0 013 3v7a3 3 0 01-3 3H5a3 3 0 01-3-3V7a3 3 0 013-3h5z" />
@@ -196,9 +215,8 @@ function fileSVG(color='#6ab0ff'){
   </svg>`;
 }
 
-// Service Worker
+// 🔒 Service Worker
 if ('serviceWorker' in navigator){
   window.addEventListener('load', ()=> navigator.serviceWorker.register('./service-worker.js'));
 }
-
 
