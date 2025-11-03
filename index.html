@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escritorio</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="desktop"></div>
+
+  <div id="taskbar">
+    <button id="start-btn">⊞</button>
+    <span id="clock"></span>
+  </div>
+
+  <div id="start-menu" class="hidden">
+    <h3>Inicio</h3>
+    <button onclick="createFile()">📄 Nuevo archivo</button>
+    <button onclick="changeWallpaper()">🖼️ Cambiar fondo</button>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

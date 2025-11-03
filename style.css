@@ -1,0 +1,67 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: Segoe UI, sans-serif;
+  user-select: none;
+}
+
+#desktop {
+  width: 100%;
+  height: 100%;
+  background: url('https://wallpapercave.com/wp/wp10615925.jpg') center/cover no-repeat;
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  width: 70px;
+  text-align: center;
+  color: white;
+  cursor: pointer;
+}
+
+.icon img {
+  width: 48px;
+  height: 48px;
+  display: block;
+  margin: 0 auto;
+}
+
+#taskbar {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  background: rgba(25, 25, 25, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  padding: 0 10px;
+}
+
+#start-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#start-menu {
+  position: absolute;
+  bottom: 40px;
+  left: 0;
+  background: rgba(40, 40, 40, 0.9);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  width: 200px;
+}
+
+.hidden {
+  display: none;
+}
