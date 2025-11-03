@@ -11,6 +11,7 @@ const ctxNew = $('#ctx-new');
 const ctxNewSub = $('#ctx-new-sub');
 const ctxWall = $('#ctx-wall');
 const wallInput = $('#wall-input');
+const ctxTitle = $('#ctx-title');
 
 const addBtn = $('#add-shortcut');
 const dlg = $('#dlg-add');
@@ -23,20 +24,23 @@ const addCancel = $('#add-cancel');
 
 const tbCenter = $('#tb-center');
 const clock = $('#clock');
+const barTitle = $('#bar-title');
 
 // Estado
 let items = JSON.parse(localStorage.getItem('desktopItems') || '[]'); // {id,type,title,url,top,left}
 let wallpaper = localStorage.getItem('wallpaperDataUrl') || '';
+let titleText = localStorage.getItem('barTitle') || 'Escritorio';
 
-// Fondo predeterminado o guardado
-if (wallpaper) {
-  desktop.style.backgroundImage = `url('${wallpaper}')`;
-}
+// Pintar fondo y título guardados
+if (wallpaper) desktop.style.backgroundImage = `url('${wallpaper}')`;
+barTitle.textContent = titleText;
 
-// Reloj
+// Reloj (fecha + hora)
 function tick(){
   const now = new Date();
-  clock.textContent = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  const time = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  const date = now.toLocaleDateString([], {weekday:'short', day:'2-digit', month:'2-digit', year:'numeric'});
+  clock.innerHTML = `<span>${date}</span><span>${time}</span>`;
 }
 tick(); setInterval(tick, 1000);
 
@@ -50,8 +54,7 @@ function renderDesktop(){
     node.style.left = i.left;
 
     const img = node.querySelector('.icon-img');
-    const label = node.querySelector('.icon-label');
-    label.textContent = i.title;
+    node.querySelector('.icon-label').textContent = i.title;
 
     if (i.type === 'shortcut') {
       img.src = FAVICON(i.url);
@@ -68,7 +71,7 @@ function renderDesktop(){
     desktop.appendChild(node);
   });
 
-  // Mostrar accesos anclados en taskbar (máx 8)
+  // Burbuja central con accesos (máx 8)
   tbCenter.innerHTML = '';
   items.filter(i=>i.type==='shortcut').slice(0,8).forEach(i=>{
     const b = document.createElement('button');
@@ -107,38 +110,30 @@ function enableDrag(el){
 }
 
 // Guardar
-function save(){
-  localStorage.setItem('desktopItems', JSON.stringify(items));
-}
+function save(){ localStorage.setItem('desktopItems', JSON.stringify(items)); }
 
 // Context menu
 desktop.addEventListener('contextmenu', e=>{
   e.preventDefault();
-  closeCtxSubs();
+  ctxNewSub.classList.add('hidden');
   ctx.style.left = e.pageX + 'px';
   ctx.style.top = e.pageY + 'px';
   ctx.classList.remove('hidden');
 });
 document.addEventListener('click', ()=> ctx.classList.add('hidden'));
 
+$('#new-folder').onclick = ()=> makeItem('folder', 'Nueva carpeta');
+$('#new-text').onclick = ()=> makeItem('text', 'Nuevo texto');
+
+ctxTitle.onclick = ()=>{
+  const val = prompt('Título de la barra:', barTitle.textContent.trim());
+  if (!val) return;
+  barTitle.textContent = val;
+  localStorage.setItem('barTitle', val);
+};
+
 ctxNew.addEventListener('mouseenter', ()=> ctxNewSub.classList.remove('hidden'));
 ctxNew.addEventListener('mouseleave', ()=> ctxNewSub.classList.add('hidden'));
-function closeCtxSubs(){ ctxNewSub.classList.add('hidden'); }
-
-// Crear carpeta
-$('#new-folder').onclick = ()=>{
-  makeItem('folder', 'Nueva carpeta');
-};
-// Crear archivo de texto
-$('#new-text').onclick = ()=>{
-  makeItem('text', 'Nuevo texto');
-};
-
-function makeItem(type, title, extra={}){
-  const pos = { top: Math.floor(80 + Math.random()*300) + 'px', left: Math.floor(40 + Math.random()*500) + 'px' };
-  items.push({ id: crypto.randomUUID(), type, title, ...extra, ...pos });
-  save(); renderDesktop();
-}
 
 // Configurar fondo (archivo local)
 ctxWall.onclick = ()=> wallInput.click();
@@ -155,7 +150,7 @@ wallInput.onchange = async e=>{
   wallInput.value = '';
 };
 
-// Añadir acceso directo (burbuja +)
+// Añadir acceso directo (+)
 addBtn.onclick = ()=>{
   preset.value = '';
   customWrap.classList.add('hidden');
@@ -163,10 +158,7 @@ addBtn.onclick = ()=>{
   customUrl.value = '';
   dlg.showModal();
 };
-preset.onchange = ()=>{
-  customWrap.classList.toggle('hidden', preset.value !== 'custom');
-};
-
+preset.onchange = ()=> customWrap.classList.toggle('hidden', preset.value !== 'custom');
 addCancel.onclick = ()=> dlg.close();
 addOk.onclick = ()=>{
   let data;
@@ -184,11 +176,15 @@ addOk.onclick = ()=>{
   dlg.close();
 };
 
-function validUrl(u){
-  try{ new URL(u); return true; } catch { return false; }
+function validUrl(u){ try{ new URL(u); return true; } catch { return false; } }
+
+function makeItem(type, title, extra={}){
+  const pos = { top: Math.floor(80 + Math.random()*300) + 'px', left: Math.floor(40 + Math.random()*500) + 'px' };
+  items.push({ id: crypto.randomUUID(), type, title, ...extra, ...pos });
+  save(); renderDesktop();
 }
 
-// SVG simples para carpeta/archivo
+// SVG simples
 function folderSVG(color='#f1c40f'){
   return `<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 24 24" fill="${color}">
     <path d="M10 4l2 2h7a3 3 0 013 3v7a3 3 0 01-3 3H5a3 3 0 01-3-3V7a3 3 0 013-3h5z" />
@@ -204,3 +200,5 @@ function fileSVG(color='#6ab0ff'){
 if ('serviceWorker' in navigator){
   window.addEventListener('load', ()=> navigator.serviceWorker.register('./service-worker.js'));
 }
+
+
