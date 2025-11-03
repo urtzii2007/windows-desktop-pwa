@@ -1,25 +1,54 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Escritorio</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <meta name="theme-color" content="#0f1115" />
 </head>
 <body>
-  <div id="desktop"></div>
+  <div id="desktop" class="desktop"></div>
 
-  <div id="taskbar">
-    <button id="start-btn">⊞</button>
-    <span id="clock"></span>
+  <!-- Menú contextual simple -->
+  <div id="context-menu" class="context hidden">
+    <button id="ctx-new-file">Nuevo acceso directo</button>
+    <button id="ctx-change-wall">Cambiar fondo</button>
   </div>
 
-  <div id="start-menu" class="hidden">
-    <h3>Inicio</h3>
-    <button onclick="createFile()">📄 Nuevo archivo</button>
-    <button onclick="changeWallpaper()">🖼️ Cambiar fondo</button>
+  <!-- Barra de tareas estilo Win11 -->
+  <div class="taskbar">
+    <div class="left">
+      <button id="btn-start" class="btn btn-start" title="Inicio">
+        <img src="icons/windows11.svg" alt="Inicio" />
+      </button>
+    </div>
+    <div id="taskbar-apps" class="center"></div>
+    <div class="right">
+      <div id="clock" class="clock"></div>
+    </div>
   </div>
+
+  <!-- Inicio -->
+  <div id="start" class="start hidden">
+    <div class="start-header">
+      <input id="search" class="search" type="text" placeholder="Buscar apps o URLs…" />
+      <div class="actions">
+        <button id="btn-add" class="btn small">+ Añadir app</button>
+        <button id="btn-wall" class="btn small">🖼 Fondo</button>
+      </div>
+    </div>
+    <div id="pinned" class="grid"></div>
+  </div>
+
+  <!-- Template icono escritorio -->
+  <template id="tpl-icon">
+    <div class="icon" draggable="true">
+      <img class="icon-img" />
+      <span class="icon-label"></span>
+    </div>
+  </template>
 
   <script src="script.js"></script>
 </body>
