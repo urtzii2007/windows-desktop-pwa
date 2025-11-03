@@ -1,67 +1,71 @@
-body, html {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: Segoe UI, sans-serif;
-  user-select: none;
+:root{
+  --glass-bg: rgba(20,22,28,.6);
+  --glass-brd: rgba(255,255,255,.08);
+  --txt: #e6e7ea;
+  --muted: #aeb3bd;
+  --accent: #5aa7ff;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+  --taskbar-h: 54px;
+  --icon-w: 84px;
 }
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:system-ui,"Segoe UI",Roboto,Ubuntu,Helvetica,Arial,sans-serif;color:var(--txt);user-select:none}
+.desktop{
+  height:100%;
+  background: #0f1115 url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat fixed;
+  position:relative;
+  overflow:hidden;
+  padding-bottom:var(--taskbar-h);
+}
+.icon{
+  position:absolute;
+  width:var(--icon-w);
+  text-align:center;
+  cursor:grab;
+  padding:8px 6px;
+  border-radius:12px;
+  transition:background .2s;
+}
+.icon:active{cursor:grabbing}
+.icon:hover{background:rgba(255,255,255,.08)}
+.icon-img{width:48px;height:48px;display:block;margin:0 auto 8px;border-radius:10px;box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.icon-label{font-size:12px;line-height:1.15;text-shadow:0 2px 4px rgba(0,0,0,.65);word-break:break-word}
 
-#desktop {
-  width: 100%;
-  height: 100%;
-  background: url('https://wallpapercave.com/wp/wp10615925.jpg') center/cover no-repeat;
-  position: relative;
+/* Taskbar */
+.taskbar{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:10px;height:var(--taskbar-h);width:min(900px,92vw);
+  background:var(--glass-bg);border:1px solid var(--glass-brd);
+  backdrop-filter: blur(14px) saturate(140%);
+  border-radius: calc(var(--radius) + 6px);
+  box-shadow: var(--shadow);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 10px;gap:10px;
 }
+.taskbar .left,.taskbar .right{display:flex;align-items:center;gap:8px}
+.center{display:flex;gap:8px;justify-content:center;flex:1}
+.btn{
+  border:1px solid var(--glass-brd);background:rgba(255,255,255,.04);
+  color:var(--txt);padding:8px 12px;border-radius:10px;cursor:pointer;
+}
+.btn:hover{background:rgba(255,255,255,.08)}
+.btn.small{padding:6px 10px;font-size:12px}
+.btn-start{width:38px;height:38px;display:grid;place-items:center}
+.btn-start img{width:20px;height:20px}
+.tb-app{
+  width:38px;height:38px;border-radius:10px;border:1px solid var(--glass-brd);
+  background:rgba(255,255,255,.06);display:grid;place-items:center;cursor:pointer;
+}
+.tb-app img{width:18px;height:18px;border-radius:6px}
+.tb-app.active{outline:2px solid var(--accent);background:rgba(90,167,255,.18)}
+.clock{font-size:12px;color:var(--muted);width:70px;text-align:center}
 
-.icon {
-  position: absolute;
-  width: 70px;
-  text-align: center;
-  color: white;
-  cursor: pointer;
-}
+/* Start menu */
+.start{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(var(--taskbar-h) + 16px);
+  width:min(880px,92vw);max-height:65vh;
+  background:var(--glass-bg);border:1px solid var(--glass-brd);backdrop-filter: blur(16px);
+  border-radius:24px;box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap
 
-.icon img {
-  width: 48px;
-  height: 48px;
-  display: block;
-  margin: 0 auto;
-}
-
-#taskbar {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 40px;
-  background: rgba(25, 25, 25, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: white;
-  padding: 0 10px;
-}
-
-#start-btn {
-  background: none;
-  border: none;
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-#start-menu {
-  position: absolute;
-  bottom: 40px;
-  left: 0;
-  background: rgba(40, 40, 40, 0.9);
-  color: white;
-  padding: 10px;
-  border-radius: 8px;
-  width: 200px;
-}
-
-.hidden {
-  display: none;
-}
