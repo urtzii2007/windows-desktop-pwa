@@ -123,5 +123,60 @@ function changeWallpaper(){
 
 /* ======= Desktop: click derecho ======= */
 desktop.addEventListener('contextmenu', e => {
-  e.preventDefault
+  e.preventDefault();
+  ctx.style.left = e.pageX + 'px';
+  ctx.style.top = e.pageY + 'px';
+  ctx.classList.remove('hidden');
+});
+document.addEventListener('click', () => ctx.classList.add('hidden'));
+ctxNew.onclick = () => {
+  const title = prompt('Nombre del acceso directo:');
+  if (!title) return;
+  const url = prompt('URL completa (https://...)');
+  try { new URL(url); } catch { alert('URL no válida'); return; }
+  const pos = { top: Math.floor(80 + Math.random()*300) + 'px', left: Math.floor(40 + Math.random()*500) + 'px' };
+  icons.push({ title, url, ...pos });
+  saveAll(); renderDesktop();
+};
+ctxWall.onclick = changeWallpaper;
 
+/* ========= Drag & Drop (escritorio) ========= */
+function enableDrag(el){
+  let startX=0,startY=0,offX=0,offY=0;
+  const onDown = e => {
+    const p = el.getBoundingClientRect();
+    startX = e.clientX; startY = e.clientY;
+    offX = p.left; offY = p.top + window.scrollY;
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  };
+  const onMove = e => {
+    const nx = offX + (e.clientX - startX);
+    const ny = offY + (e.clientY - startY);
+    el.style.left = Math.max(6, nx) + 'px';
+    el.style.top  = Math.max(6, ny) + 'px';
+  };
+  const onUp = () => {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+    // persistir
+    const label = el.querySelector('.icon-label').textContent;
+    const idx = icons.findIndex(i => i.title === label);
+    if (idx>-1){ icons[idx].left = el.style.left; icons[idx].top = el.style.top; saveAll(); }
+  };
+  el.addEventListener('mousedown', onDown);
+}
+
+/* ========= Persistencia ========= */
+function saveAll(){
+  localStorage.setItem('apps', JSON.stringify(apps));
+  localStorage.setItem('desktopIcons', JSON.stringify(icons));
+}
+
+/* ========= SW registro ========= */
+if ('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>navigator.serviceWorker.register('./service-worker.js'));
+}
+
+/* ========= Init ========= */
+render();
