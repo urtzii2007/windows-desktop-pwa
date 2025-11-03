@@ -1,5 +1,5 @@
 {
-  "name": "Escritorio estilo Windows",
+  "name": "Escritorio virtual",
   "short_name": "Escritorio",
   "start_url": "index.html",
   "display": "standalone",
@@ -9,3 +9,4 @@
     { "src": "icons/512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
+
